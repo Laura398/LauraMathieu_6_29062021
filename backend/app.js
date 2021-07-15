@@ -4,6 +4,12 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 
+/*Security*/
+const helmet = require('helmet');
+const noCache = require('nocache');
+const ENV = require('dotenv');
+ENV.config();
+
 /*Routes parameters*/
 const saucesRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
@@ -11,8 +17,29 @@ const userRoutes = require('./routes/user');
 /*Express app initialisation*/
 const app = express();
 
+/*Express Rate Limit*/
+const rateLimit = require('express-rate-limit');
+
+/*Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc) :
+(see https://expressjs.com/en/guide/behind-proxies.html)
+app.set('trust proxy', 1);*/
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, /*15 minutes*/
+  max: 100 /*limit each IP to 100 requests per windowMs*/
+});
+
+/*Apply to all requests*/
+app.use(limiter);
+
+/*HTTP request security with Helmet*/
+app.use(helmet());
+
+/*No Cache with Helmet*/
+app.use(noCache());
+
 /*Connecting to MongoDB*/
-mongoose.connect('mongodb+srv://pekocko:pecocko.password48@cluster0.jpeop.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+mongoose.connect(process.env.PATH_URL,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))

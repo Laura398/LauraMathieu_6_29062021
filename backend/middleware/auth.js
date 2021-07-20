@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 const ENV = require('dotenv');
 ENV.config();
 
-console.log(process.env.JWT_KEY)
-
 /*Checking TOKEN*/
 module.exports = (req, res, next) => {
   try {

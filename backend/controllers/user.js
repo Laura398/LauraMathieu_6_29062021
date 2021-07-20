@@ -5,18 +5,11 @@ const User = require('../models/User');
 
 /*Generating TOKENs*/
 const jwt = require('jsonwebtoken');
+const ENV = require('dotenv');
+ENV.config();
 
 /*MaskData to mask mails*/
 const MaskData = require('maskdata');
-/* Default Options
-    maskWith : "*"
-    unmaskedStartCharacters : 3
-    unmaskedEndCharacters : 2
-    maskAtTheRate : false
-    maxMaskedCharactersBeforeAtTheRate : 10
-    maxMaskedCharactersAfterAtTheRate : 10
-*/
-/*Will show only the first 3 characters and the last 2*/
 
 /*Creating accounts when users sign up*/
 exports.signup = (req, res, next) => {
@@ -49,7 +42,7 @@ exports.login = (req, res, next) => {
             userId: user._id,
             token: jwt.sign(
               { userId: user._id },
-              'RANDOM_TOKEN_SECRET',
+              process.env.JWT_KEY,
               { expiresIn: '24h' }
             )
           });

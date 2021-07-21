@@ -1,3 +1,5 @@
+const logger = require("../logger");
+
 var passwordValidator = require('password-validator');
  
 /*Create a schema*/
@@ -14,20 +16,20 @@ schema
 .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
  
 /*Validate against a password string*/
-console.log(schema.validate('validPASS123'));
+logger.info(schema.validate('validPASS123'));
 /*=> true*/
-console.log(schema.validate('invalidPASS'));
+logger.info(schema.validate('invalidPASS'));
 /*=> false*/
  
 /*Get a full list of rules which failed*/
-console.log(schema.validate('joke', { list: true }));
+logger.info(schema.validate('joke', { list: true }));
 /*=> [ 'min', 'uppercase', 'digits' ]*/
 
 /*Entered password validation*/
 module.exports = (req, res, next) => {
     if(!schema.validate(req.body.password)){
         res.status(400).json({ error : "le mot de passe n'est pas assez fort : " + schema.validate(req.body.password, {list : true})});
-        console.log("Le mot de passe n'est pas assez fort!")
+        logger.error("Le mot de passe n'est pas assez fort!")
     }
     else{
         next();

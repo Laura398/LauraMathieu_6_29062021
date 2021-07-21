@@ -1,6 +1,8 @@
 const http = require('http');
 const app = require('./app');
 
+const logger = require("./logger");
+
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -41,7 +43,7 @@ server.on('error', errorHandler);
 server.on('listening', () => {
   const address = server.address();
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-  console.log('Listening on ' + bind);
+  logger.info('Listening on ' + bind);
 });
 
 server.listen(port);

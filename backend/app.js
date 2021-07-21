@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
+const logger = require("./logger");
 
 /*Security*/
 const helmet = require('helmet');
@@ -42,8 +43,8 @@ app.use(noCache());
 mongoose.connect(process.env.PATH_URL,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+  .then(() => logger.info('Connexion à MongoDB réussie !'))
+  .catch(() => logger.error('Connexion à MongoDB échouée !'));
 
 /*CORS*/
 app.use((req, res, next) => {

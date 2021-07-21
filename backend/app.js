@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const path = require('path');
 const logger = require("./logger");
+const morgan = require('morgan');
 
 /*Security*/
 const helmet = require('helmet');
@@ -35,6 +36,9 @@ app.use(limiter);
 
 /*HTTP request security with Helmet*/
 app.use(helmet());
+
+/*Use morgan to show requests in logs*/
+app.use(morgan('tiny'));
 
 /*No Cache with Helmet*/
 app.use(noCache());

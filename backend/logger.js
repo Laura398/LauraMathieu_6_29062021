@@ -1,4 +1,7 @@
 const { createLogger, format, transports } = require("winston");
+require('winston-mongodb');
+const ENV = require('dotenv');
+ENV.config();
 
 // https://github.com/winstonjs/winston#logging
 // { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
@@ -33,7 +36,14 @@ if (process.env.NODE_ENV !== "production") {
   logger = createLogger({
     level: level,
     format: developmentFormat,
-    transports: [new transports.Console()]
+    transports: [
+      new transports.Console(),
+      new transports.MongoDB({
+        level: 'error',
+        db: process.env.PATH_URL,
+        collection: 'pekocko_logs'
+      })
+    ]
   });
 
 } else {

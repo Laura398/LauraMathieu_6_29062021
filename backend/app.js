@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const logger = require("./logger");
 const morgan = require('morgan');
+var mongooseMorgan = require('mongoose-morgan');
 
 /*Security*/
 const helmet = require('helmet');
@@ -39,6 +40,10 @@ app.use(helmet());
 
 /*Use morgan to show requests in logs*/
 app.use(morgan('tiny'));
+app.use(mongooseMorgan({
+  connectionString: process.env.PATH_URL,
+  collection: 'pekocko_logs'
+}));
 
 /*No Cache with Helmet*/
 app.use(noCache());

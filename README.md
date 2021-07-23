@@ -1,4 +1,4 @@
-# Instruction
+# Instructions pour l'installation du projet
 
 ## Piquante
 

@@ -8,15 +8,15 @@ const jwt = require('jsonwebtoken');
 const ENV = require('dotenv');
 ENV.config();
 
-/*MaskData to mask mails*/
-const MaskData = require('maskdata');
+/*Crypto-js*/
+const cryptojs = require('crypto-js');
 
 /*Creating accounts when users sign up*/
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
       .then(hash => {
         const user = new User({
-          email: MaskData.maskEmail2(req.body.email),
+          email: cryptojs.HmacSHA256(req.body.email, process.env.EMAIL_KEY).toString(), /*Crypting email using 'HmacSHA256' method*/
           password: hash
         });
         user.save()
@@ -28,7 +28,7 @@ exports.signup = (req, res, next) => {
 
 /*Checking users loging in*/
 exports.login = (req, res, next) => {
-  User.findOne({ email: MaskData.maskEmail2(req.body.email)})
+  User.findOne({ email: cryptojs.HmacSHA256(req.body.email, process.env.EMAIL_KEY).toString()})
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
